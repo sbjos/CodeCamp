@@ -22,11 +22,11 @@ public class User implements UserDetails {
 
     private String password;
 
-    private List<Authority> authorities;
+    private List authorities;
 
     public User() {}
 
-    public User(Date cohortStartDate, String username, String password, List<Authority> authorities) {
+    public User(Date cohortStartDate, String username, String password, List authorities) {
         this.cohortStartDate = cohortStartDate;
         this.username = username;
         this.password = password;
@@ -94,7 +94,7 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(List authorities) {
         this.authorities = authorities;
     }
 

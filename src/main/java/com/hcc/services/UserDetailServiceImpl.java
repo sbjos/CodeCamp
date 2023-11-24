@@ -21,7 +21,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
      * Loads the user by username.
      * @param username the username identifying the user whose data is required.
      * @return the user
-     * @throws UsernameNotFoundException
+     * @throws UsernameNotFoundException if user is not found
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
