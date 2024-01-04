@@ -1,52 +1,53 @@
 package com.hcc.entities;
 
-import com.hcc.enums.AuthorityEnum;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.hcc.utils.CustomPasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "cohort_start_date")
-    private Date cohortStartDate;
+    private LocalDate cohortStartDate;
 
     private String username;
 
     private String password;
 
-    private List authorities;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+     private Set<Authority> authorities;
 
     public User() {}
 
-    public User(Date cohortStartDate, String username, String password, List authorities) {
+    public User(LocalDate cohortStartDate, String username, String password, Set<Authority> authorities)
+    {
         this.cohortStartDate = cohortStartDate;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
     }
 
+    // To encode a password for a created user
+    public void setEncodedPassword(String password) {
+        this.password = new CustomPasswordEncoder().getPasswordEncoder().encode(password);
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getCohortStartDate() {
+    public LocalDate getCohortStartDate() {
         return cohortStartDate;
-    }
-
-    public void setCohortStartDate(Date cohortStartDate) {
-        this.cohortStartDate = cohortStartDate;
     }
 
     @Override
@@ -54,17 +55,9 @@ public class User implements UserDetails {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     @Override
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
@@ -89,13 +82,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new Authority(null, AuthorityEnum.STUDENT.getAuthorityMessage(), null));
-        return roles;
-    }
-
-    public void setAuthorities(List authorities) {
-        this.authorities = authorities;
+        return authorities;
     }
 
     @Override
@@ -114,11 +101,12 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         User that = (User) o;
-        return Objects.equals(this.id, that.id) && Objects.equals(this.username, that.username);
+        return Objects.equals(this.id, that.id) &&
+         Objects.equals(this.username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(this.id, this.username);
     }
 }

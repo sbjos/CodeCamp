@@ -4,32 +4,34 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AssignmentEnum {
+
     // Learner
-    CREATE(1, "Create Assignment"),
-    EDIT(2, "Edit Assignment"),
-    VIEW(3, "View Assignment"),
+    CREATE(1, "Create"),
+    EDIT(2, "edit"),
+
+    // Learner / Reviewer
+    VIEW(3, "view"),
 
     // Reviewer
-    CLAIM(4, "Claim Assignment"),
-    REVIEW(5, "Review Assignment"),
-    COMPLETE(6, "Assignment Completed"),
-    NEEDS_REVIEW(7, "Assignment Needs Work"),
-    RECLAIM(8, "Reclaim Assignment");
+    CLAIM(4, "claim"),
+    COMPLETE(5, "complete"),
+    REJECT(6, "needs work"),
+    RECLAIM(7, "reclaim");
 
-    private final int assignmentNumber;
+    private final int number;
 
-    private final String assignmentMessage;
+    private final String permission;
 
-    AssignmentEnum(int assignmentNumber, String assignmentMessage) {
-        this.assignmentNumber = assignmentNumber;
-        this.assignmentMessage = assignmentMessage;
+    AssignmentEnum(int number, String permission) {
+        this.number = number;
+        this.permission = permission;
     }
 
-    public int getAssignmentNumber() {
-        return assignmentNumber;
+    public int getNumber() {
+        return number;
     }
 
-    public String getAssignmentMessage() {
-        return assignmentMessage;
+    public String getPermission() {
+        return permission;
     }
 }

@@ -11,9 +11,10 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int number;
+
     private String status;
 
-    private int number;
 
     @Column(name = "github_url")
     private String githubUrl;
@@ -23,18 +24,20 @@ public class Assignment {
     @Column(name = "code_review_video_url")
     private String reviewVideoUrl;
 
-    @Column(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "code_reviewer_id")
+    @ManyToOne
+    @JoinColumn(name = "code_reviewer_id")
     private User codeReviewer;
 
     public Assignment() {}
 
-    public Assignment(String status, int number, String githubUrl,
-                      String branch, String reviewVideoUrl, User user, User codeReviewer) {
-        this.status = status;
+    public Assignment(int number, String status, String githubUrl, String branch,
+                      String reviewVideoUrl, User user, User codeReviewer) {
         this.number = number;
+        this.status = status;
         this.githubUrl = githubUrl;
         this.branch = branch;
         this.reviewVideoUrl = reviewVideoUrl;
@@ -50,20 +53,20 @@ public class Assignment {
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public int getNumber() {
         return number;
     }
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getGithubUrl() {

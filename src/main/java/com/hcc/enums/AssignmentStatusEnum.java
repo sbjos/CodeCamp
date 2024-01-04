@@ -4,24 +4,26 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum AssignmentStatusEnum {
-    IN_REVIEW(1, "Assignment In Review"),
-    REVISION(2, "Assignment Needs work"),
-    COMPLETED(3, "Assignment Completed");
 
-    private final int assignmentNumber;
+    IN_PROGRESS(1, "in progress"),
+    SUBMITTED(2, "submitted"),
+    NEEDS_REVIEW(3, "needs review"),
+    COMPLETED(4, "completed");
 
-    private final String assignmentMessage;
+    private final int number;
 
-    AssignmentStatusEnum(int assignmentNumber, String assignmentMessage) {
-        this.assignmentNumber = assignmentNumber;
-        this.assignmentMessage = assignmentMessage;
+    private final String status;
+
+    AssignmentStatusEnum(int number, String status) {
+        this.number = number;
+        this.status = status;
     }
 
-    public int getAssignmentNumber() {
-        return assignmentNumber;
+    public int getNumber() {
+        return number;
     }
 
-    public String getAssignmentMessage() {
-        return assignmentMessage;
+    public String getStatus() {
+        return status;
     }
 }

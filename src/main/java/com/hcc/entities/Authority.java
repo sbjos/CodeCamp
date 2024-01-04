@@ -1,5 +1,6 @@
 package com.hcc.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -15,48 +16,33 @@ public class Authority implements GrantedAuthority {
 
     private String authority;
 
-    @Column(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     public Authority() {}
 
-    public Authority(Long id, String authority, User user) {
-        this.id = id;
+    public Authority(String authority) {
         this.authority = authority;
-        this.user = user;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    @Override
     public String getAuthority() {
         return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public String toString() {
-        return "Authority{" +
-                "id=" + id +
-                ", authority='" + authority + '\'' +
-                ", user_id=" + user +
-                '}';
+        return authority;
     }
 
     @Override
@@ -64,11 +50,12 @@ public class Authority implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         Authority that = (Authority) o;
-        return Objects.equals(this.id, that.id) && Objects.equals(this.user, that.user);
+        return Objects.equals(this.authority, that.authority) &&
+                Objects.equals(this.user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user);
+        return Objects.hash(this.authority, this.user);
     }
 }
