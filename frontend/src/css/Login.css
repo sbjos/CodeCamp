@@ -1,0 +1,23 @@
+#root {
+  padding: 2rem;
+  text-align: center;
+}
+
+.login-header {
+  margin-bottom: 30px;
+}
+
+.login-header h1 {
+  padding: 15px 0;
+}
+
+.form-login button button {
+  width: 150px;
+}
+
+#error {
+  color: rgb(223, 26, 26);
+  margin-top: 15px;
+  margin-bottom: 5px;
+  height: 28px;
+}

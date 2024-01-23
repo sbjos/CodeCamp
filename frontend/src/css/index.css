@@ -1,0 +1,155 @@
+* {
+  box-sizing: border-box;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 2;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #35373a;
+
+  background-color: #ffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 2.5em;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+h2 {
+  font-size: 25px;
+}
+
+/* ul {
+  position: inherit;
+}
+
+li {
+  position: inherit;
+}
+
+li p {
+  position: inherit;
+}
+
+li b {
+  position: inherit;
+} */
+
+a {
+  font-weight: 500;
+  color: #a3a3a3;
+  text-decoration: inherit;
+
+  &:hover {
+    color: #6d6a6a;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input {
+  display: flex;
+  font-size: 1.05em;
+  color: #242424;
+  font-weight: 500;
+  font-family: inherit;
+}
+
+input {
+  border-radius: 8px;
+  color: #35373a;
+  border: 1px solid white;
+  background-color: #dddad8;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  min-width: 40ch;
+}
+
+button {
+  color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid rgb(212, 210, 210);
+  padding: 12px;
+  font-size: 1.25em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #8a6205;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin-top: 5px;
+  width: 150px;
+
+  &:hover {
+    background-color: #8a6205;
+  }
+
+  &:disabled {
+    border: 1px solid #928c8c;
+    background-color: #888484;
+    color: #423e35;
+  }
+}
+
+.separationline {
+  border: 1px solid #e7d8c7;
+}
+
+#redirect {
+  color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid rgb(212, 210, 210);
+  padding: 12px;
+  font-size: 1.25em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #8a6205;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin-top: 5px;
+  width: 150px;
+
+  &:hover {
+    background-color: rgb(194, 147, 39);
+  }
+}
+
+#logout {
+  /* text-align: center; */
+  font-weight: 300;
+  font-size: 1.65em;
+  font-weight: 500;
+  color: #8a6205;
+  /* padding: 5px; */
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
