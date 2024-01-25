@@ -5,7 +5,6 @@ import axios from "axios";
 // TODO: Uncomment
 // import Validate from "../components/Validate";
 import "../css/AssignmentViews.css";
-import Validate from "../components/Validate";
 
 function LearnerAssignmentView() {
   const [assignment, setAssignment] = useState(null);
@@ -18,7 +17,6 @@ function LearnerAssignmentView() {
   const authorityArray = cleanUserAuthority
     ? cleanUserAuthority.split(", ")
     : "";
-  const user = authorityArray[0];
 
   // Validate a user's access to a webpage
   // TODO: Uncomment
@@ -32,7 +30,6 @@ function LearnerAssignmentView() {
           "http://localhost:8080/api/assignments/" + id,
           { headers: { Authorization: "Bearer " + token } }
         );
-        // TEST: for testing
         console.log(response.data);
         setAssignment(response.data);
       } catch (err) {

@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
-
 @RestController
 public class AssignmentController {
 
@@ -30,7 +28,7 @@ public class AssignmentController {
     private AssignmentRepository assignmentRepository;
 
     /**
-     * Gets all assignments by a user.
+     * Gets all af a user's assignment.
      * @param user
      * @return HTTPStatus response with a list of assignments.
      * @throws AssignmentNotFoundException
@@ -55,8 +53,6 @@ public class AssignmentController {
         return new ResponseEntity<>(assignmentDTO, HttpStatus.OK);
     }
 
-
-
     /**
      * Gets an assignment by ID.
      * @param assignmentId
@@ -67,8 +63,9 @@ public class AssignmentController {
     @GetMapping(value = "/api/assignments/{id}")
     public ResponseEntity<AssignmentResponseDto> getAssignmentById(@PathVariable("id") Long assignmentId,
                                                                    @AuthenticationPrincipal User user) {
-        Optional<Assignment> assignment = assignmentLookup(assignmentId, user);
-        AssignmentResponseDto assignmentDTO = new AssignmentResponseDto(assignment.orElse(new Assignment()));
+        AssignmentResponseDto assignmentDTO = new AssignmentResponseDto(assignmentLookup(assignmentId, user)
+                .orElse(new Assignment())
+        );
 
         return new ResponseEntity<>(assignmentDTO, HttpStatus.OK);
     }
@@ -85,12 +82,12 @@ public class AssignmentController {
                                                                       @RequestBody Assignment update,
                                                                       @AuthenticationPrincipal User user) {
         Optional<Assignment> assignment;
-
         GrantedAuthority userAuthority = user.getAuthorities().stream().findFirst().get();
 
         if (userAuthority.toString().equals(AuthorityEnum.REVIEWER.name())) {
             assignment = assignmentLookup(assignmentId, update.getUser());
-            if (isNull(assignment.get().getCodeReviewer())) assignment.get().setCodeReviewer(user);
+
+            Optional.of(user).ifPresent(codeReviewer -> assignment.get().setCodeReviewer(codeReviewer));
             assignment.get().setStatus(update.getStatus());
             Optional.ofNullable(update.getReviewVideoUrl()).ifPresent(videoUrl -> assignment.get().setReviewVideoUrl(videoUrl));
 
@@ -99,8 +96,9 @@ public class AssignmentController {
 
             Optional.ofNullable(update.getGithubUrl()).ifPresent(url -> assignment.get().setGithubUrl(url));
             Optional.ofNullable(update.getBranch()).ifPresent(branch -> assignment.get().setBranch(branch));
-        }
+            assignment.get().setStatus(AssignmentStatusEnum.SUBMITTED.getStatus());
 
+        }
 
         AssignmentResponseDto assignmentDto = new AssignmentResponseDto(assignment.orElse(null));
 
@@ -127,13 +125,23 @@ public class AssignmentController {
     }
 
     /**
-     * Finds an assignment by id, and return the assignment that can be used by a mapping method
+     * Finds an assignment by id and user or by id and reviewer.
      * @param assignmentId
      * @param user
      * @return assignment
      */
     private Optional<Assignment> assignmentLookup(Long assignmentId, User user) {
-        return Optional.ofNullable(assignmentRepository.findByIdAndUser(assignmentId, user)
-                .orElseThrow(() -> new AssignmentNotFoundException("Assignment not found")));
+        GrantedAuthority userAuthority = user.getAuthorities().stream().findFirst().get();
+
+        if (userAuthority.toString().equals(AuthorityEnum.REVIEWER.name())) {
+            return Optional.ofNullable(assignmentRepository.findByIdAndCodeReviewer(assignmentId, user)
+                        .orElseThrow(() -> new AssignmentNotFoundException("Assignment not found"))
+            );
+
+        } else {
+            return Optional.ofNullable(assignmentRepository.findByIdAndUser(assignmentId, user)
+                        .orElseThrow(() -> new AssignmentNotFoundException("Assignment not found"))
+            );
+        }
     }
 }

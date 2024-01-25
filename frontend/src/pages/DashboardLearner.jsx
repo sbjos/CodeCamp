@@ -29,8 +29,7 @@ function DashboardLearner() {
           "http://localhost:8080/api/assignments",
           { headers: { Authorization: "Bearer " + token } }
         );
-        // TEST: for testing
-        console.log("response", response);
+        console.log(response);
         setAssignments(response.data);
       } catch (err) {
         if (!err) {
@@ -42,9 +41,6 @@ function DashboardLearner() {
     };
     fetchData();
   }, []);
-
-  // TEST: For testing
-  console.log("outside assignments-useState", assignments);
 
   return (
     <>

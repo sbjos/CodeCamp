@@ -15,4 +15,5 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 
     Optional<Assignment> findByIdAndUser(Long id, User user);
     List<Assignment> findByUser(User user);
+    Optional<Assignment> findByIdAndCodeReviewer(Long id, User user);
 }

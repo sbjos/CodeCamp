@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ReviewerMapping from "../components/ReviewerMapping";
 import Logout from "../components/Logout";
-import Validate from "../components/Validate";
 // TODO: Uncomment
 // import Validate from "../components/Validate";
 import "../css/Dashboard.css";
@@ -31,8 +30,7 @@ function DashboardReviewer() {
           "http://localhost:8080/api/assignments",
           { headers: { Authorization: "Bearer " + token } }
         );
-        // TEST: for testing
-        console.log("response", response);
+        console.log(response);
         setAssignments(response.data);
       } catch (err) {
         if (!err) {
@@ -44,9 +42,6 @@ function DashboardReviewer() {
     };
     fetchData();
   }, []);
-
-  // TEST: for testing
-  console.log("outside assignments-useState", assignments);
 
   return (
     <>
@@ -72,7 +67,7 @@ function DashboardReviewer() {
           {ReviewerMapping(
             assignments.filter(
               (item) =>
-                item.assignment.status === "Needs review" &&
+                item.assignment.status === "In review" &&
                 item.assignment.codeReviewer.username == user
             ),
             token
