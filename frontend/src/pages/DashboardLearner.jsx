@@ -1,32 +1,36 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import AssignmentMapping from "../components/AssignmentMapping";
+import LearnerMapping from "../components/LearnerMapping";
 import Logout from "../components/Logout";
+// TODO: Uncomment
 // import Validate from "../components/Validate";
 import "../css/Dashboard.css";
 import "../css/ScrollButton.css";
 
 function DashboardLearner() {
   const [assignments, setAssignments] = useState([]);
-  const authority = localStorage.getItem("lmsuserauthorities").split(", ");
-  const user = authority[0];
+  const token = localStorage.getItem("lmsusertoken");
+  const userAuthority = localStorage.getItem("lmsuserauthorities");
+  const cleanUserAuthority = userAuthority ? userAuthority.trim() : "";
+  const authorityArray = cleanUserAuthority
+    ? cleanUserAuthority.split(", ")
+    : "";
+  const user = authorityArray[0];
 
-  // TODO: Uncomment
   // Validate a user's access to a webpage
-  // Validate(token);
+  // TODO: Uncomment
+  // Validate(token, cleanUserAuthority);
 
   // automatically fetches and loads assignments by user
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("lmsusertoken");
         const response = await axios.get(
           "http://localhost:8080/api/assignments",
-          {
-            headers: { Authorization: "Bearer " + token },
-          }
+          { headers: { Authorization: "Bearer " + token } }
         );
-        console.log("assignments", response);
+        // TEST: for testing
+        console.log("response", response);
         setAssignments(response.data);
       } catch (err) {
         if (!err) {
@@ -38,6 +42,9 @@ function DashboardLearner() {
     };
     fetchData();
   }, []);
+
+  // TEST: For testing
+  console.log("outside assignments-useState", assignments);
 
   return (
     <>
@@ -55,31 +62,30 @@ function DashboardLearner() {
       </div>
       <hr className="separationline" />
       <div className="assignment">
+        <label htmlFor="submitted">Submitted</label>
+        <ul className="card-container">
+          {LearnerMapping(
+            assignments.filter((item) => item.assignment.status === "Submitted")
+          )}
+        </ul>
         <label htmlFor="in review">In review</label>
         <ul className="card-container">
-          {AssignmentMapping(
-            assignments.filter(
-              (item) => item.assignment.status === "In review"
-            ),
-            authority
+          {LearnerMapping(
+            assignments.filter((item) => item.assignment.status === "In review")
           )}
         </ul>
         <label htmlFor="needs work">Needs work</label>
         <ul className="card-container">
-          {AssignmentMapping(
+          {LearnerMapping(
             assignments.filter(
               (item) => item.assignment.status === "Needs work"
-            ),
-            authority
+            )
           )}
         </ul>
         <label htmlFor="completed">Completed</label>
         <ul className="card-container">
-          {AssignmentMapping(
-            assignments.filter(
-              (item) => item.assignment.status === "Completed"
-            ),
-            authority
+          {LearnerMapping(
+            assignments.filter((item) => item.assignment.status === "Completed")
           )}
         </ul>
       </div>

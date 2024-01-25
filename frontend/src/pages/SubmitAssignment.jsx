@@ -1,31 +1,37 @@
 import { useState } from "react";
 import axios from "axios";
 import "../css/CreateAssignment.css";
+// TODO: Uncomment
 // import Validate from "../components/Validate";
 
 function SubmitAssignment() {
   const [number, setNumber] = useState(null);
   const [githubUrl, setGithubUrl] = useState(null);
   const [branch, setBranch] = useState(null);
+  const token = localStorage.getItem("lmsusertoken");
+  const userAuthority = localStorage.getItem("lmsuserauthorities");
+  const cleanUserAuthority = userAuthority ? userAuthority.trim() : "";
+  const authorityArray = cleanUserAuthority
+    ? cleanUserAuthority.split(", ")
+    : "";
+  const user = authorityArray[0];
 
   // TODO: Uncomment
-
   // Validate a user's access to a webpage
-  // Validate(token);
+  // Validate(token, cleanUserAuthority);
 
   // submits a new assignment
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("lmsusertoken");
       const assignment = { number, githubUrl, branch };
       const response = await axios.post(
         "http://localhost:8080/api/assignments",
         assignment,
         { headers: { Authorization: "Bearer " + token } }
       );
-
+      // TEST: for testing
       console.log(response.status);
       alert("Assignment submitted !");
       window.location.reload();

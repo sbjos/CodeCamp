@@ -1,4 +1,5 @@
 import { useState } from "react";
+// TODO: Uncomment
 // import Validate from "../components/Validate";
 
 function ReviewerAssignmentView() {
@@ -6,11 +7,17 @@ function ReviewerAssignmentView() {
   const [githubUrl, setGithubUrl] = useState("");
   const [branch, setBranch] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("lmsusertoken");
+  const userAuthority = localStorage.getItem("lmsuserauthorities");
+  const cleanUserAuthority = userAuthority ? userAuthority.trim() : "";
+  const authorityArray = cleanUserAuthority
+    ? cleanUserAuthority.split(", ")
+    : "";
+  const user = authorityArray[0];
 
-  // TODO: Uncomment
   // Validate a user's access to a webpage
-  // Validate(token);
+  // TODO: Uncomment
+  // Validate(token, cleanUserAuthority);
 
   return (
     <>

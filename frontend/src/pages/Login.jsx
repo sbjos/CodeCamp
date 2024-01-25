@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../css/Login.css";
@@ -7,12 +7,27 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate("");
+  const userAuthority = localStorage.getItem("lmsuserauthorities");
+  const token = localStorage.getItem("lmsusertoken");
 
-  /**
-   * Sumbit a request to login to application.
-   * @param {e} e
-   */
+  // Redirects to apropriate dashboard based on authority if session exist
+  useEffect(() => {
+    if (token || userAuthority) {
+      const authority = userAuthority.split(", ")[1];
+      if (authority === "[LEARNER]") {
+        navigate("/api/dashboard");
+      }
+      if (authority === "[REVIEWER]") {
+        navigate("/api/dashboard/reviewer");
+      }
+      if (authority === "[ADMIN]") {
+        navigate("/api/admin");
+      }
+    }
+  }, []);
+
+  // Sumbit a request to login to application.
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,15 +36,20 @@ function Login() {
         "http://localhost:8080/api/auth/login",
         { username, password }
       );
+      // TEST: for testing
       console.log(response);
 
       const userAuthority = response.headers.authority.slice(1, -1);
-      localStorage.setItem(
+      const headerStorage = localStorage.setItem(
         "lmsusertoken",
         response.headers.authorization.split(" ")[1]
       );
-      localStorage.setItem("lmsuserauthorities", userAuthority);
+      const tokenStorage = localStorage.setItem(
+        "lmsuserauthorities",
+        userAuthority
+      );
 
+      // redirect to apropriate dashboard based on authority after successfull login
       const authority = userAuthority.split(", ")[1];
       if (authority === "[LEARNER]") {
         navigate("/api/dashboard");

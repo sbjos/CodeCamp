@@ -10,11 +10,6 @@ import com.hcc.repositories.AssignmentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +32,7 @@ public class AssignmentController {
     /**
      * Gets all assignments by a user.
      * @param user
-     * @return ok Status response with a list of assignments.
+     * @return HTTPStatus response with a list of assignments.
      * @throws AssignmentNotFoundException
      */
     @GetMapping(value = "/api/assignments")
@@ -46,8 +41,9 @@ public class AssignmentController {
 
         if (user.getAuthorities().toString().contains(AuthorityEnum.LEARNER.name())) {
             assignmentsPage = assignmentRepository.findByUser(user);
+
         } else if (user.getAuthorities().toString().contains(AuthorityEnum.REVIEWER.name())) {
-            assignmentsPage = assignmentRepository.findByCodeReviewer(user);
+            assignmentsPage = assignmentRepository.findAll();
         }
 
         if (assignmentsPage.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,11 +55,13 @@ public class AssignmentController {
         return new ResponseEntity<>(assignmentDTO, HttpStatus.OK);
     }
 
+
+
     /**
      * Gets an assignment by ID.
      * @param assignmentId
      * @param user
-     * @return ok Status response with assignment.
+     * @return HTTPStatus response with assignment.
      * @throws AssignmentNotFoundException
      */
     @GetMapping(value = "/api/assignments/{id}")
@@ -79,23 +77,32 @@ public class AssignmentController {
      * Modifies an existing assignment.
      * @param assignmentId
      * @param user
-     * @return ok Status response with the modified assignment.
+     * @return HTTPStatus response with the modified assignment.
      * @throws AssignmentNotFoundException
      */
     @PutMapping(value = "/api/assignments/{id}")
     public ResponseEntity<AssignmentResponseDto> updateAssignmentById(@PathVariable("id") Long assignmentId,
                                                                       @RequestBody Assignment update,
                                                                       @AuthenticationPrincipal User user) {
-        Optional<Assignment> assignment = assignmentLookup(assignmentId, user);
+        Optional<Assignment> assignment;
 
-        if (!isNull(update.getNumber())) assignment.get().setNumber(update.getNumber());
-        if (!isNull(update.getStatus())) assignment.get().setStatus(update.getStatus());
-        if (!isNull(update.getGithubUrl())) assignment.get().setGithubUrl(update.getGithubUrl());
-        if (!isNull(update.getBranch())) assignment.get().setBranch(update.getBranch());
-        if (!isNull(update.getReviewVideoUrl())) assignment.get().setReviewVideoUrl(update.getReviewVideoUrl());
-        if (!isNull(update.getCodeReviewer())) assignment.get().setCodeReviewer(update.getCodeReviewer());
+        GrantedAuthority userAuthority = user.getAuthorities().stream().findFirst().get();
 
-        AssignmentResponseDto assignmentDto = new AssignmentResponseDto(assignment.orElse(new Assignment()));
+        if (userAuthority.toString().equals(AuthorityEnum.REVIEWER.name())) {
+            assignment = assignmentLookup(assignmentId, update.getUser());
+            if (isNull(assignment.get().getCodeReviewer())) assignment.get().setCodeReviewer(user);
+            assignment.get().setStatus(update.getStatus());
+            Optional.ofNullable(update.getReviewVideoUrl()).ifPresent(videoUrl -> assignment.get().setReviewVideoUrl(videoUrl));
+
+        } else {
+            assignment = assignmentLookup(assignmentId, user);
+
+            Optional.ofNullable(update.getGithubUrl()).ifPresent(url -> assignment.get().setGithubUrl(url));
+            Optional.ofNullable(update.getBranch()).ifPresent(branch -> assignment.get().setBranch(branch));
+        }
+
+
+        AssignmentResponseDto assignmentDto = new AssignmentResponseDto(assignment.orElse(null));
 
         assignmentRepository.save(assignment.get());
 

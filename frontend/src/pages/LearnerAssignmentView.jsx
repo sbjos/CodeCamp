@@ -2,28 +2,37 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import axios from "axios";
+// TODO: Uncomment
 // import Validate from "../components/Validate";
 import "../css/AssignmentViews.css";
+import Validate from "../components/Validate";
 
 function LearnerAssignmentView() {
   const [assignment, setAssignment] = useState(null);
   const [githubUrl, setGithubUrl] = useState(null);
   const [branch, setBranch] = useState(null);
   const { id } = useParams(null);
+  const token = localStorage.getItem("lmsusertoken");
+  const userAuthority = localStorage.getItem("lmsuserauthorities");
+  const cleanUserAuthority = userAuthority ? userAuthority.trim() : "";
+  const authorityArray = cleanUserAuthority
+    ? cleanUserAuthority.split(", ")
+    : "";
+  const user = authorityArray[0];
 
-  // TODO: Uncomment
   // Validate a user's access to a webpage
-  // Validate(token);
+  // TODO: Uncomment
+  // Validate(token, cleanUserAuthority);
 
   // automatically fetches and loads the assignment by ID
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("lmsusertoken");
         const response = await axios.get(
           "http://localhost:8080/api/assignments/" + id,
           { headers: { Authorization: "Bearer " + token } }
         );
+        // TEST: for testing
         console.log(response.data);
         setAssignment(response.data);
       } catch (err) {
@@ -54,14 +63,12 @@ function LearnerAssignmentView() {
       alert("No changes detected");
     } else {
       try {
-        const token = localStorage.getItem("lmsusertoken");
         const assignment = { githubUrl, branch };
         const response = await axios.put(
           "http://localhost:8080/api/assignments/" + id,
           assignment,
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response.status);
         alert("Assignment updated !");
         window.location.reload();
       } catch (err) {

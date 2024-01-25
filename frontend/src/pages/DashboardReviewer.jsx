@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import AssignmentMapping from "../components/AssignmentMapping";
+import ReviewerMapping from "../components/ReviewerMapping";
+import Logout from "../components/Logout";
+import Validate from "../components/Validate";
+// TODO: Uncomment
 // import Validate from "../components/Validate";
 import "../css/Dashboard.css";
 import "../css/ScrollButton.css";
@@ -8,21 +11,28 @@ import "../css/ScrollButton.css";
 function DashboardReviewer() {
   const [assignments, setAssignments] = useState([]);
   const token = localStorage.getItem("lmsusertoken");
-  const authority = localStorage.getItem("lmsuserauthorities").split(", ");
-  const user = authority[0];
+  const userAuthority = localStorage.getItem("lmsuserauthorities");
+  const cleanUserAuthority = userAuthority ? userAuthority.trim() : "";
+  const authorityArray = cleanUserAuthority
+    ? cleanUserAuthority.split(", ")
+    : "";
+  const user = authorityArray[0];
 
-  // TODO: Uncomment
   // Validate a user's access to a webpage
-  // Validate(token);
+  // TODO: Uncomment
+  // Validate(token, cleanUserAuthority);
 
+  // automatically fetches and loads all assignments
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem("lmsusertoken");
         const response = await axios.get(
           "http://localhost:8080/api/assignments",
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response.data);
+        // TEST: for testing
+        console.log("response", response);
         setAssignments(response.data);
       } catch (err) {
         if (!err) {
@@ -32,48 +42,51 @@ function DashboardReviewer() {
         }
       }
     };
-
     fetchData();
   }, []);
 
-  console.log("assignments", assignments);
+  // TEST: for testing
+  console.log("outside assignments-useState", assignments);
+
   return (
     <>
       <div className="dashboard-header">
         <h1>{user}'s Dashboard</h1>
       </div>
       <div className="option">
-        <a id="logout" href="logout">
-          Logout
-        </a>
+        <p>{Logout()}</p>
       </div>
       <hr className="separationline" />
       <div className="assignment">
-        <label htmlFor="in review">In review</label>
-        <ul className="card-container">
-          {AssignmentMapping(
-            assignments.filter(
-              (item) => item.assignment.status === "In review"
-            ),
-            authority
-          )}
-        </ul>
         <label htmlFor="Submitted">Submitted</label>
         <ul className="card-container">
-          {AssignmentMapping(
+          {ReviewerMapping(
             assignments.filter(
               (item) => item.assignment.status === "Submitted"
             ),
-            authority
+            token
+          )}
+        </ul>
+        <label htmlFor="in review">In review</label>
+        <ul className="card-container">
+          {ReviewerMapping(
+            assignments.filter(
+              (item) =>
+                item.assignment.status === "Needs review" &&
+                item.assignment.codeReviewer.username == user
+            ),
+            token
           )}
         </ul>
         <label htmlFor="completed">Completed</label>
         <ul className="card-container">
-          {AssignmentMapping(
+          {ReviewerMapping(
             assignments.filter(
-              (item) => item.assignment.status === "Completed"
+              (item) =>
+                item.assignment.status === "Completed" &&
+                item.assignment.codeReviewer.username == user
             ),
-            authority
+            token
           )}
         </ul>
       </div>
