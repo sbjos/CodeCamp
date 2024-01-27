@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import axios from "axios";
-// TODO: Uncomment
-// import Validate from "../components/Validate";
+import Validate from "../components/Validate";
 import "../css/AssignmentViews.css";
 
 function LearnerAssignmentView() {
@@ -19,8 +18,7 @@ function LearnerAssignmentView() {
     : "";
 
   // Validate a user's access to a webpage
-  // TODO: Uncomment
-  // Validate(token, cleanUserAuthority);
+  Validate(token, cleanUserAuthority);
 
   // automatically fetches and loads the assignment by ID
   useEffect(() => {
@@ -30,7 +28,6 @@ function LearnerAssignmentView() {
           "http://localhost:8080/api/assignments/" + id,
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response.data);
         setAssignment(response.data);
       } catch (err) {
         if (!err) {
@@ -66,9 +63,13 @@ function LearnerAssignmentView() {
           assignment,
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response.status);
-        alert("Assignment updated !");
-        window.location.reload();
+        if (!response.status) {
+          return <p>loading</p>;
+        }
+        if (response.status === 200) {
+          alert("Assignment updated !");
+          window.location.reload();
+        }
       } catch (err) {
         if (!err) {
           console.error("No server response");
@@ -80,13 +81,10 @@ function LearnerAssignmentView() {
     }
   };
 
-  console.log("assignment", assignment.assignment.status);
-
   function reviewVideo() {
     if (assignment.assignment.status == "Needs work") {
       return (
         <div className="form-create-box">
-          {/* TODO: make the box geyish like the  */}
           <label htmlFor="reviewVideo">Review video</label>
           <input
             id="reviewVideo"
@@ -105,14 +103,6 @@ function LearnerAssignmentView() {
         <h2>{assignment.assignment.status}</h2>
       </div>
       <div className="burger">
-        <div className="nav">
-          {/* TODO: fix this navbar situation */}
-          <Nav>
-            <NavDropdown title="Assignments">
-              <NavDropdown.Item id="nav">List of assignments</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
-        </div>
         <form className="form-edit" onSubmit={handleSubmit}>
           <div className="form-edit-github">
             <label htmlFor="githuburl">Github</label>

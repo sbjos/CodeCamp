@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import axios from "axios";
-// TODO: Uncomment
-// import Validate from "../components/Validate";
+import Validate from "../components/Validate";
 
 function ReviewerAssignmentView() {
   const [assignment, setAssignment] = useState(null);
@@ -17,8 +16,7 @@ function ReviewerAssignmentView() {
     : "";
 
   // Validate a user's access to a webpage
-  // TODO: Uncomment
-  // Validate(token, cleanUserAuthority);
+  Validate(token, cleanUserAuthority);
 
   // automatically fetches and loads the assignment by ID
   useEffect(() => {
@@ -28,7 +26,6 @@ function ReviewerAssignmentView() {
           "http://localhost:8080/api/assignments/" + id,
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response.data);
         setAssignment(response.data);
       } catch (err) {
         if (!err) {
@@ -67,7 +64,6 @@ function ReviewerAssignmentView() {
             assignment,
             { headers: { Authorization: "Bearer " + token } }
           );
-          console.log(response.status);
           alert("Assignment updated !");
           window.location.reload();
         } catch (err) {
@@ -99,9 +95,13 @@ function ReviewerAssignmentView() {
             assignment,
             { headers: { Authorization: "Bearer " + token } }
           );
-          console.log(response.status);
-          alert("Assignment updated !");
-          window.location.reload();
+          if (!response.status) {
+            return <p>loading</p>;
+          }
+          if (response.status === 200) {
+            alert("Assignment updated !");
+            window.location.reload();
+          }
         } catch (err) {
           if (!err) {
             console.error("No server response");

@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ReviewerMapping from "../components/ReviewerMapping";
 import Logout from "../components/Logout";
-// TODO: Uncomment
-// import Validate from "../components/Validate";
+import Validate from "../components/Validate";
 import "../css/Dashboard.css";
 import "../css/ScrollButton.css";
 
@@ -18,8 +17,7 @@ function DashboardReviewer() {
   const user = authorityArray[0];
 
   // Validate a user's access to a webpage
-  // TODO: Uncomment
-  // Validate(token, cleanUserAuthority);
+  Validate(token, cleanUserAuthority);
 
   // automatically fetches and loads all assignments
   useEffect(() => {
@@ -30,7 +28,6 @@ function DashboardReviewer() {
           "http://localhost:8080/api/assignments",
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response);
         setAssignments(response.data);
       } catch (err) {
         if (!err) {

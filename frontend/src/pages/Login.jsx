@@ -36,8 +36,6 @@ function Login() {
         "http://localhost:8080/api/auth/login",
         { username, password }
       );
-      // TEST: for testing
-      console.log(response);
 
       const userAuthority = response.headers.authority.slice(1, -1);
       const headerStorage = localStorage.setItem(

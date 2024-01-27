@@ -1,37 +1,34 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Validate(token, userAuthority) {
-  const navigate = useNavigate();
+  let status;
 
-  useEffect(() => {
-    if (!token || !userAuthority) {
-      navigate("/api/auth/login");
-      localStorage.clear();
-    } else {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            "http://localhost:8080/api/auth/validate",
-            { headers: { Authorization: "Bearer " + token } }
-          );
-          // TEST: for testing
-          console.log("assignments", response);
-        } catch (err) {
+  if (!token || !userAuthority) {
+    window.location.href = "/api/auth/login";
+    localStorage.clear();
+  } else {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8080/api/auth/validate",
+          { headers: { Authorization: "Bearer " + token } }
+        );
+        status = response.status;
+      } catch (err) {
+        localStorage.clear();
+        if (!err) {
+          console.error("No Server Response");
+        } else {
+          navigate("/api/auth/login");
           localStorage.clear();
-          if (!err) {
-            console.error("No Server Response");
-          } else {
-            navigate("/api/auth/login");
-            localStorage.clear();
-            console.error(err);
-          }
+          console.error(err);
         }
-      };
-      fetchData();
-    }
-  }, []);
+      }
+    };
+    fetchData();
+  }
+
+  return status;
 }
 
 export default Validate;

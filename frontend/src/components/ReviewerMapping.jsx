@@ -21,7 +21,6 @@ function ReviewerMapping(assignments, token) {
           assignment,
           { headers: { Authorization: "Bearer " + token } }
         );
-        console.log(response);
         alert("Assignment claimed successfully !");
         window.location.reload();
       } catch (err) {

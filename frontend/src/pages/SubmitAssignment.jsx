@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "../css/SubmitAssignment.css";
-// TODO: Uncomment
-// import Validate from "../components/Validate";
+import Validate from "../components/Validate";
 
 function SubmitAssignment() {
   const [githubUrl, setGithubUrl] = useState("");
@@ -15,9 +14,8 @@ function SubmitAssignment() {
     : "";
   const user = authorityArray[0];
 
-  // TODO: Uncomment
   // Validate a user's access to a webpage
-  // Validate(token, cleanUserAuthority);
+  Validate(token, cleanUserAuthority);
 
   // creates a new assignment
   const handleSubmit = async (e) => {
@@ -30,8 +28,13 @@ function SubmitAssignment() {
         assignment,
         { headers: { Authorization: "Bearer " + token } }
       );
-      // TEST: for testing
-      console.log(response.status);
+      if (!response.status) {
+        return <p>loading</p>;
+      }
+      if (response.status === 200) {
+        alert("Assignment updated !");
+        window.location.reload();
+      }
       alert("Assignment created !");
       window.location.reload();
     } catch (err) {

@@ -16,12 +16,8 @@ function LearnerMapping(assignments) {
       return <h4>No review</h4>;
     } else {
       return (
-        <a
-          className="button"
-          href={assignmentItem.assignment.reviewVideoUrl}
-          target="blank"
-        >
-          View
+        <a className="button" href={assignmentItem.assignment.reviewVideoUrl}>
+          Review
         </a>
       );
     }

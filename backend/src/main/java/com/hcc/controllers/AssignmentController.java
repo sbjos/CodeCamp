@@ -116,6 +116,7 @@ public class AssignmentController {
     @PostMapping(value = "/api/assignments")
     public ResponseEntity<AssignmentResponseDto> createAssignment(@RequestBody Assignment assignment,
                                               @AuthenticationPrincipal User user) {
+        assignment.setNumber(new Random().nextInt(100));
         assignment.setUser(user);
         assignment.setStatus(AssignmentStatusEnum.SUBMITTED.getStatus());
 
