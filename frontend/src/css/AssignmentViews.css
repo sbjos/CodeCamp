@@ -2,6 +2,10 @@
   padding-top: 25px;
 }
 
+.form-edit label {
+  font-size: 1.25em;
+}
+
 .form-edit-button {
   margin-top: 25px;
   display: flex;

@@ -118,7 +118,7 @@ function ReviewerAssignmentView() {
     if (assignment.assignment.status === "Completed") {
       return (
         <div>
-          <div className="form-create-box">
+          <div className="form-edit-review">
             <label htmlFor="reviewvideo">Review video</label>
             <input
               id="reviewvideo"
@@ -129,8 +129,8 @@ function ReviewerAssignmentView() {
               }}
             />
           </div>
-          <div className="form-create-button">
-            <a id="redirect" href="/api/reviewer/dashboard">
+          <div className="form-edit-button">
+            <a className="button" href="/api/reviewer/dashboard">
               dashboard
             </a>
           </div>
@@ -139,8 +139,8 @@ function ReviewerAssignmentView() {
     } else {
       return (
         <div>
-          <form className="form-create">
-            <div className="form-create-box">
+          <form className="form-edit">
+            <div className="form-edit-review">
               <label htmlFor="reviewvideo">Review video</label>
               <input
                 id="reviewvideo"
@@ -156,14 +156,10 @@ function ReviewerAssignmentView() {
                 required
               />
             </div>
-            <div className="form-create-button">
-              <button id="ref-button" onClick={complete}>
-                Complete
-              </button>
-              <button id="ref-button" onClick={reject}>
-                Needs work
-              </button>
-              <a id="redirect" href="/api/reviewer/dashboard">
+            <div className="form-edit-button">
+              <button onClick={complete}>Complete</button>
+              <button onClick={reject}>Needs work</button>
+              <a className="button" href="/api/reviewer/dashboard">
                 dashboard
               </a>
             </div>
@@ -175,30 +171,26 @@ function ReviewerAssignmentView() {
 
   return (
     <>
-      <div className="learnerview-container">
-        <div className="submit-header">
-          <h1>Assignment {assignment.assignment.number}</h1>
-          <h2>{assignment.assignment.status}</h2>
+      <div className="edit-header">
+        <h1>Assignment {assignment.assignment.number}</h1>
+        <h2>{assignment.assignment.status}</h2>
+      </div>
+      <div className="burger">
+        <div className="form-edit-github">
+          <label htmlFor="githuburl">Github</label>
+          <input
+            id="githuburl"
+            placeholder={assignment.assignment.githubUrl}
+            disabled
+          />
         </div>
-        <div className="assignmentlist"></div>
-
-        <div className="form-container">
-          <div className="form-create-box">
-            <label htmlFor="githuburl">Github</label>
-            <input
-              id="githuburl"
-              placeholder={assignment.assignment.githubUrl}
-              disabled
-            />
-          </div>
-          <div className="form-create-box">
-            <label htmlFor="branch">Branch</label>
-            <input
-              id="branch"
-              placeholder={assignment.assignment.branch}
-              disabled
-            />
-          </div>
+        <div className="form-edit-branch">
+          <label htmlFor="branch">Branch</label>
+          <input
+            id="branch"
+            placeholder={assignment.assignment.branch}
+            disabled
+          />
         </div>
         <div>{formOrNot()}</div>
       </div>

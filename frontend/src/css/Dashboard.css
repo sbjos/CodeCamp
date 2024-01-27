@@ -1,14 +1,20 @@
-.ldashboard-header {
+.dashboard-header {
   color: #313233;
   margin-bottom: 30px;
 }
 
-.ldashboard-header h1 {
-  margin-bottom: 20px;
+.dashboard-navbar {
+  height: 47px;
+  display: flex;
+  justify-content: center;
+  gap: 50px;
 }
 
-.ldashboard-navbar .button {
-  margin-right: 80px;
+.dashboard-navbar .button {
+  display: flex;
+  justify-content: center;
+  width: auto;
+  align-items: center;
 }
 
 .label-container {
@@ -60,4 +66,14 @@
 
 #card-button {
   margin-top: 28px;
+  height: 47px;
+  display: flex;
+  justify-content: center;
+}
+
+#card-button a {
+  display: flex;
+  justify-content: center;
+  width: 160px;
+  align-items: center;
 }

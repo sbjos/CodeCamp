@@ -45,11 +45,12 @@ a {
 }
 
 label {
-  font-size: 1.1em;
+  font-size: 1.05em;
   font-weight: 500;
   margin: 0;
   display: flex;
   justify-content: flex-start;
+  margin-left: 30px;
 }
 
 input {
@@ -60,7 +61,7 @@ input {
   background-color: #ffff;
   display: flex;
   font-size: 1em;
-  height: 45px;
+  height: 40px;
   font-weight: 500;
   font-family: inherit;
   border-radius: 8px;
@@ -82,7 +83,6 @@ button,
   transition: border-color 0.25s;
   text-decoration: none;
   text-wrap: nowrap;
-  max-width: 150px;
   margin: 0;
 
   &:hover {

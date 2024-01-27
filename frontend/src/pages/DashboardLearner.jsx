@@ -44,11 +44,11 @@ function DashboardLearner() {
 
   return (
     <>
-      <div className="ldashboard-header">
+      <div className="dashboard-header">
         <h1>{user}'s Dashboard</h1>
         <h2>Welcome {user}</h2>
       </div>
-      <div className="ldashboard-navbar">
+      <div className="dashboard-navbar">
         <a className="button" href="/api/submitassignment">
           Submit new assignment
         </a>

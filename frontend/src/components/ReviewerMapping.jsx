@@ -49,7 +49,7 @@ function ReviewerMapping(assignments, token) {
       );
     } else {
       return (
-        <a id="redirect" href={"/api/reviewer/assignment/" + id}>
+        <a className="button" href={"/api/reviewer/assignment/" + id}>
           View
         </a>
       );
@@ -59,22 +59,15 @@ function ReviewerMapping(assignments, token) {
   return (
     <>
       {assignments.map((assignmentItem) => (
-        <li id="dashboard-cards" key={assignmentItem.assignment.id}>
+        <li className="cards" key={assignmentItem.assignment.id}>
+          <div>Number: {assignmentItem.assignment.number}</div>
           <div>
-            <p>Number: {assignmentItem.assignment.number}</p>
+            Github:&nbsp;
+            <a href={assignmentItem.assignment.githubUrl}>Link</a>
           </div>
-          <div>
-            <a href={assignmentItem.assignment.githubUrl} target="blank">
-              Github
-            </a>
-          </div>
-          <div>
-            <a href={assignmentItem.assignment.branch} target="blank">
-              Branch
-            </a>
-          </div>
-          <div></div>
-          <div className="assignment-button">{button(assignmentItem)}</div>
+          <div>Branch: {assignmentItem.assignment.branch}</div>
+          <div>Learner: {assignmentItem.assignment.user.username}</div>
+          <div id="card-button">{button(assignmentItem)}</div>
         </li>
       ))}
     </>

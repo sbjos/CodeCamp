@@ -48,12 +48,14 @@ function DashboardReviewer() {
       <div className="dashboard-header">
         <h1>{user}'s Dashboard</h1>
       </div>
-      <div className="option">
+      <div className="dashboard-navbar">
         <p>{Logout()}</p>
       </div>
       <hr className="separationline" />
-      <div className="assignment">
-        <label htmlFor="Submitted">Submitted</label>
+      <div className="assignments-container">
+        <div className="label-container">
+          <label htmlFor="Submitted">Submitted</label>
+        </div>
         <ul className="card-container">
           {ReviewerMapping(
             assignments.filter(
@@ -62,7 +64,10 @@ function DashboardReviewer() {
             token
           )}
         </ul>
-        <label htmlFor="in review">In review</label>
+        <hr className="separationline" />
+        <div className="label-container">
+          <label htmlFor="in review">In review</label>
+        </div>
         <ul className="card-container">
           {ReviewerMapping(
             assignments.filter(
@@ -73,7 +78,10 @@ function DashboardReviewer() {
             token
           )}
         </ul>
-        <label htmlFor="completed">Completed</label>
+        <hr className="separationline" />
+        <div className="label-container">
+          <label htmlFor="completed">Completed</label>
+        </div>
         <ul className="card-container">
           {ReviewerMapping(
             assignments.filter(
