@@ -48,7 +48,7 @@ function LearnerAssignmentView() {
     return <div>Loading...</div>;
   }
 
-  // Submits an updated assignment
+  // Updates an assignment
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -66,6 +66,7 @@ function LearnerAssignmentView() {
           assignment,
           { headers: { Authorization: "Bearer " + token } }
         );
+        console.log(response.status);
         alert("Assignment updated !");
         window.location.reload();
       } catch (err) {
@@ -79,13 +80,31 @@ function LearnerAssignmentView() {
     }
   };
 
+  console.log("assignment", assignment.assignment.status);
+
+  function reviewVideo() {
+    if (assignment.assignment.status == "Needs work") {
+      return (
+        <div className="form-create-box">
+          {/* TODO: make the box geyish like the  */}
+          <label htmlFor="reviewVideo">Review video</label>
+          <input
+            id="reviewVideo"
+            placeholder={assignment.assignment.reviewVideoUrl}
+            disabled
+          />
+        </div>
+      );
+    }
+  }
+
   return (
     <>
-      <div className="learnerview-container">
-        <div className="submit-header">
-          <h1>Assignment {assignment.assignment.number}</h1>
-          <h2>{assignment.assignment.status}</h2>
-        </div>
+      <div className="edit-header">
+        <h1>Assignment {assignment.assignment.number}</h1>
+        <h2>{assignment.assignment.status}</h2>
+      </div>
+      <div className="burger">
         <div className="nav">
           {/* TODO: fix this navbar situation */}
           <Nav>
@@ -94,39 +113,37 @@ function LearnerAssignmentView() {
             </NavDropdown>
           </Nav>
         </div>
-        <div className="assignmentlist"></div>
-        <form className="form-create" onSubmit={handleSubmit}>
-          <div className="form-container">
-            <div className="form-create-box">
-              <label htmlFor="githuburl">Github</label>
-              <input
-                id="githuburl"
-                type="text"
-                defaultValue={
-                  githubUrl ? githubUrl : assignment.assignment.githubUrl
-                }
-                onChange={(e) => {
-                  setGithubUrl(e.target.value);
-                }}
-                required
-              />
-            </div>
-            <div className="form-create-box">
-              <label htmlFor="branch">Branch</label>
-              <input
-                id="branch"
-                type="text"
-                defaultValue={branch ? branch : assignment.assignment.branch}
-                onChange={(e) => {
-                  setBranch(e.target.value);
-                }}
-                required
-              />
-            </div>
+        <form className="form-edit" onSubmit={handleSubmit}>
+          <div className="form-edit-github">
+            <label htmlFor="githuburl">Github</label>
+            <input
+              id="githuburl"
+              type="text"
+              defaultValue={
+                githubUrl ? githubUrl : assignment.assignment.githubUrl
+              }
+              onChange={(e) => {
+                setGithubUrl(e.target.value);
+              }}
+              required
+            />
           </div>
-          <div className="form-create-button">
-            <button id="ref-button">Submit</button>
-            <a id="redirect" href="/api/dashboard">
+          <div className="form-edit-branch">
+            <label htmlFor="branch">Branch</label>
+            <input
+              id="branch"
+              type="text"
+              defaultValue={branch ? branch : assignment.assignment.branch}
+              onChange={(e) => {
+                setBranch(e.target.value);
+              }}
+              required
+            />
+          </div>
+          {reviewVideo(assignment)}
+          <div className="form-edit-button">
+            <button>Submit</button>
+            <a className="button" href="/api/dashboard">
               dashboard
             </a>
           </div>

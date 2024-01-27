@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import axios from "axios";
 // TODO: Uncomment
 // import Validate from "../components/Validate";
 
 function ReviewerAssignmentView() {
-  const [assignment, setAssignment] = useState("");
+  const [assignment, setAssignment] = useState(null);
+  const [reviewVideoUrl, setReviewVideoUrl] = useState("");
   const { id } = useParams(null);
   const token = localStorage.getItem("lmsusertoken");
   const userAuthority = localStorage.getItem("lmsuserauthorities");
@@ -38,20 +41,144 @@ function ReviewerAssignmentView() {
     fetchData();
   }, []);
 
+  // Handles loading of data fetching
+  if (!assignment) {
+    return <div>Loading...</div>;
+  }
+
+  const user = assignment.assignment.user;
+
+  // Updates an assignment
+
+  const complete = async (e) => {
+    e.preventDefault();
+
+    if (!reviewVideoUrl) {
+      alert("Please add a review video.");
+    } else {
+      if (reviewVideoUrl == assignment.assignment.reviewVideoUrl) {
+        alert("No changes detected");
+      } else {
+        try {
+          const status = "Completed";
+          const assignment = { reviewVideoUrl, status, user };
+          const response = await axios.put(
+            "http://localhost:8080/api/assignments/" + id,
+            assignment,
+            { headers: { Authorization: "Bearer " + token } }
+          );
+          console.log(response.status);
+          alert("Assignment updated !");
+          window.location.reload();
+        } catch (err) {
+          if (!err) {
+            console.error("No server response");
+          } else {
+            console.error(err);
+            alert("Failed to update the assignment !");
+          }
+        }
+      }
+    }
+  };
+
+  const reject = async (e) => {
+    e.preventDefault();
+
+    if (!reviewVideoUrl) {
+      alert("Please add a review video.");
+    } else {
+      if (reviewVideoUrl == assignment.assignment.reviewVideoUrl) {
+        alert("No changes detected");
+      } else {
+        try {
+          const status = "Needs work";
+          const assignment = { reviewVideoUrl, status, user };
+          const response = await axios.put(
+            "http://localhost:8080/api/assignments/" + id,
+            assignment,
+            { headers: { Authorization: "Bearer " + token } }
+          );
+          console.log(response.status);
+          alert("Assignment updated !");
+          window.location.reload();
+        } catch (err) {
+          if (!err) {
+            console.error("No server response");
+          } else {
+            console.error(err);
+            alert("Failed to update the assignment !");
+          }
+        }
+      }
+    }
+  };
+
+  function formOrNot() {
+    if (assignment.assignment.status === "Completed") {
+      return (
+        <div>
+          <div className="form-create-box">
+            <label htmlFor="reviewvideo">Review video</label>
+            <input
+              id="reviewvideo"
+              type="text"
+              placeholder={assignment.assignment.reviewVideoUrl}
+              onChange={(e) => {
+                setReviewVideoUrl(e.target.value);
+              }}
+            />
+          </div>
+          <div className="form-create-button">
+            <a id="redirect" href="/api/reviewer/dashboard">
+              dashboard
+            </a>
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <form className="form-create">
+            <div className="form-create-box">
+              <label htmlFor="reviewvideo">Review video</label>
+              <input
+                id="reviewvideo"
+                type="text"
+                defaultValue={
+                  reviewVideoUrl
+                    ? reviewVideoUrl
+                    : assignment.assignment.reviewVideoUrl
+                }
+                onChange={(e) => {
+                  setReviewVideoUrl(e.target.value);
+                }}
+                required
+              />
+            </div>
+            <div className="form-create-button">
+              <button id="ref-button" onClick={complete}>
+                Complete
+              </button>
+              <button id="ref-button" onClick={reject}>
+                Needs work
+              </button>
+              <a id="redirect" href="/api/reviewer/dashboard">
+                dashboard
+              </a>
+            </div>
+          </form>
+        </div>
+      );
+    }
+  }
+
   return (
     <>
       <div className="learnerview-container">
         <div className="submit-header">
           <h1>Assignment {assignment.assignment.number}</h1>
           <h2>{assignment.assignment.status}</h2>
-        </div>
-        <div className="nav">
-          {/* TODO: fix this navbar situation */}
-          <Nav>
-            <NavDropdown title="Assignments">
-              <NavDropdown.Item id="nav">List of assignments</NavDropdown.Item>
-            </NavDropdown>
-          </Nav>
         </div>
         <div className="assignmentlist"></div>
 
@@ -60,7 +187,6 @@ function ReviewerAssignmentView() {
             <label htmlFor="githuburl">Github</label>
             <input
               id="githuburl"
-              // type="text"
               placeholder={assignment.assignment.githubUrl}
               disabled
             />
@@ -69,31 +195,12 @@ function ReviewerAssignmentView() {
             <label htmlFor="branch">Branch</label>
             <input
               id="branch"
-              type="text"
               placeholder={assignment.assignment.branch}
               disabled
             />
           </div>
         </div>
-        <form className="form-create" onSubmit={handleSubmit}>
-          <div className="form-create-box">
-            <label htmlFor="review video url">Review video</label>
-            <input
-              id="branch"
-              type="text"
-              defaultValue={assignment.assignment.reviewVideoUrl}
-              // onChange={}
-            />
-          </div>
-          <div className="form-create-button">
-            <button id="ref-button">Submit</button>
-            <button id="ref-button">Reject</button>
-            <a id="redirect" href="/api/reviewer/dashboard">
-              dashboard
-            </a>
-          </div>
-        </form>
-        <div></div>
+        <div>{formOrNot()}</div>
       </div>
     </>
   );

@@ -4,9 +4,11 @@ function LearnerMapping(assignments) {
     const assignmentStatus = assignmentItem.assignment.status;
     const video = assignmentItem.assignment.reviewVideoUrl;
     const id = assignmentItem.assignment.id;
+
+    // filters by assignment status to assign the appropriate button
     if (assignmentStatus !== "Completed") {
       return (
-        <a id="redirect" href={"/api/assignment/" + id}>
+        <a className="button" href={"/api/assignment/" + id}>
           Edit
         </a>
       );
@@ -15,7 +17,7 @@ function LearnerMapping(assignments) {
     } else {
       return (
         <a
-          id="redirect"
+          className="button"
           href={assignmentItem.assignment.reviewVideoUrl}
           target="blank"
         >
@@ -28,29 +30,20 @@ function LearnerMapping(assignments) {
   return (
     <>
       {assignments.map((assignmentItem) => (
-        <li id="dashboard-cards" key={assignmentItem.assignment.id}>
+        <li className="cards" key={assignmentItem.assignment.id}>
+          <div>Number: {assignmentItem.assignment.number}</div>
           <div>
-            <p>Number: {assignmentItem.assignment.number}</p>
+            Github:&nbsp;
+            <a href={assignmentItem.assignment.githubUrl}>Link</a>
           </div>
+          <div>Branch: {assignmentItem.assignment.branch}</div>
           <div>
-            <a href={assignmentItem.assignment.githubUrl} target="blank">
-              Github
-            </a>
+            Reviewer:&nbsp;
+            {assignmentItem.assignment.codeReviewer
+              ? assignmentItem.assignment.codeReviewer.username
+              : "N/A"}
           </div>
-          <div>
-            <a href={assignmentItem.assignment.branch} target="blank">
-              Branch
-            </a>
-          </div>
-          <div>
-            <p>
-              Reviewer:{" "}
-              {assignmentItem.assignment.codeReviewer
-                ? assignmentItem.assignment.codeReviewer.username
-                : "Not assigned"}
-            </p>
-          </div>
-          <div className="assignment-button">{button(assignmentItem)}</div>
+          <div id="card-button">{button(assignmentItem)}</div>
         </li>
       ))}
     </>

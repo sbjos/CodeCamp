@@ -44,42 +44,51 @@ function DashboardLearner() {
 
   return (
     <>
-      <div className="dashboard-header">
+      <div className="ldashboard-header">
         <h1>{user}'s Dashboard</h1>
-        <h2>Welcome {user}...</h2>
+        <h2>Welcome {user}</h2>
       </div>
-      <div className="option">
-        <a id="redirect" href="/api/submitassignment">
+      <div className="ldashboard-navbar">
+        <a className="button" href="/api/submitassignment">
           Submit new assignment
         </a>
-        <div>
-          <p>{Logout()}</p>
-        </div>
+        {Logout()}
       </div>
       <hr className="separationline" />
-      <div className="assignment">
-        <label htmlFor="submitted">Submitted</label>
-        <ul className="card-container">
+      <div className="assignments-container">
+        <div className="label-container">
+          <label>Submitted</label>
+        </div>
+        <ul>
           {LearnerMapping(
             assignments.filter((item) => item.assignment.status === "Submitted")
           )}
         </ul>
-        <label htmlFor="in review">In review</label>
-        <ul className="card-container">
+        <hr className="separationline" />
+        <div className="label-container">
+          <label>In review</label>
+        </div>
+        <ul>
           {LearnerMapping(
             assignments.filter((item) => item.assignment.status === "In review")
           )}
         </ul>
-        <label htmlFor="needs work">Needs work</label>
-        <ul className="card-container">
+        <hr className="separationline" />
+        <div className="label-container">
+          <label>Needs work</label>
+        </div>
+        <ul>
           {LearnerMapping(
             assignments.filter(
               (item) => item.assignment.status === "Needs work"
             )
           )}
         </ul>
-        <label htmlFor="completed">Completed</label>
-        <ul className="card-container">
+        <hr className="separationline" />
+        <div className="label-container">
+          <label>Completed</label>
+        </div>
+        <ul>
           {LearnerMapping(
             assignments.filter((item) => item.assignment.status === "Completed")
           )}

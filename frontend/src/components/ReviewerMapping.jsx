@@ -3,11 +3,11 @@ import axios from "axios";
 function ReviewerMapping(assignments, token) {
   // Sets the button based on the assignment status. Also submits a form to claim an assignment.
   function button(assignmentItem) {
-    const assignmentStatus = assignmentItem.assignment.status;
-    const video = assignmentItem.assignment.reviewVideoUrl;
     const id = assignmentItem.assignment.id;
-    const codeReviewer = assignmentItem.assignment.codeReviewer;
+    const assignmentStatus = assignmentItem.assignment.status;
     const user = assignmentItem.assignment.user;
+    const codeReviewer = assignmentItem.assignment.codeReviewer;
+    const reviewVideoUrl = assignmentItem.assignment.reviewVideoUrl;
 
     // Form submition for claiming an assignment.
     const handleSubmit = async (e) => {
@@ -35,7 +35,13 @@ function ReviewerMapping(assignments, token) {
     };
 
     // Button config based in assignment status.
-    if (assignmentStatus === "Submitted") {
+    if (assignmentStatus === "Submitted" && codeReviewer !== null) {
+      return (
+        <form className="form-claim" onSubmit={handleSubmit}>
+          <button>Reclaim</button>
+        </form>
+      );
+    } else if (assignmentStatus === "Submitted") {
       return (
         <form className="form-claim" onSubmit={handleSubmit}>
           <button>Claim</button>

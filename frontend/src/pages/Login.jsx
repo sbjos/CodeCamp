@@ -19,7 +19,7 @@ function Login() {
         navigate("/api/dashboard");
       }
       if (authority === "[REVIEWER]") {
-        navigate("/api/reviewer/dashboard");
+        navigate("/api/dashboard/reviewer");
       }
       if (authority === "[ADMIN]") {
         navigate("/api/admin");
@@ -55,7 +55,7 @@ function Login() {
         navigate("/api/dashboard");
       }
       if (authority === "[REVIEWER]") {
-        navigate("/api/dashboard/reviewer");
+        navigate("/api/reviewer/dashboard");
       }
       if (authority === "[ADMIN]") {
         navigate("/api/admin");
@@ -75,38 +75,37 @@ function Login() {
       <div className="login-header">
         <h1>Login</h1>
       </div>
-      <form className="form-login" onSubmit={handleSubmit}>
-        <div className="form-login username">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            autoComplete="username"
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-            required
-          />
-        </div>
-        <div className="form-login password">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            required
-          />
-        </div>
-        <div className="form-login button">
+      <div className="login-burger">
+        <form className="form-login" onSubmit={handleSubmit}>
+          <div className="form-login-username">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              autoComplete="username"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+              required
+            />
+          </div>
+          <div className="form-login-password">
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              required
+            />
+          </div>
           <div id="error">{error}</div>
           <button>Login</button>
-        </div>
-      </form>
+        </form>
+      </div>
     </>
   );
 }
